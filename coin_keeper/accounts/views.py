@@ -1,0 +1,156 @@
+from django.utils.translation import gettext as _
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.core.mail import send_mail
+from django.conf import settings
+from .utils import genera_token, verifica_token
+
+
+User = get_user_model()
+
+def dashboard_view(request):
+    return render(request, "accounts/dashboard.html")
+
+def verify_view(request, token):
+    user_id = verifica_token(token)
+    if not user_id:
+        messages.error(request, _("Link non valido o scaduto."))
+        return redirect("login")
+
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        messages.error(request, _("Utente inesistente."))
+        return redirect("login")
+
+    if user.is_verified:
+        messages.info(request, _("Email già verificata."))
+    else:
+        user.is_verified = True
+        user.save()
+        messages.success(request, _("Email verificata con successo! Ora puoi accedere."))
+    
+    return redirect("login")
+
+def login_view(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+
+        try:
+            user_obj = User.objects.get(email=email)
+            user = authenticate(request, username=user_obj.username, password=password)
+        except User.DoesNotExist:
+            user = None
+
+        if user is not None:
+            if user.is_verified:
+                login(request, user)
+                return redirect("dashboard")
+            else:
+                messages.error(request, _("Devi prima verificare la tua email."))
+                return redirect("login")
+        else:
+            messages.error(request, _("Credenziali non valide."))
+            return redirect("login")
+
+    return render(request, "accounts/login.html")
+
+def signup_view(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        password1 = request.POST.get("password1")
+        password2 = request.POST.get("password2")
+
+        if password1 != password2:
+            messages.error(request, _("Le password non coincidono."))
+            return render(request, "accounts/signup.html")
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, _("Nome utente già esistente."))
+            return render(request, "accounts/signup.html")
+
+        if User.objects.filter(email=email).exists():
+            messages.error(request, _("Email già registrata."))
+            return render(request, "accounts/signup.html")
+
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password1,
+            is_verified=False
+        )
+
+        token = genera_token(user.id)
+        verify_url = f"http://127.0.0.1:8000/accounts/verify/{token}/"
+
+        subject = _("Verifica la tua email - Coin Keeper")
+        message = _("Ciao {username}, clicca qui per verificare la tua email: {url}").format(
+            username=username, url=verify_url
+        )
+        from_email = settings.DEFAULT_FROM_EMAIL
+        recipient_list = [email]
+
+        send_mail(subject, message, from_email, recipient_list)
+
+        messages.success(request, _("Registrazione completata! Controlla la tua email per verificare l'account."))
+        return redirect("login")
+
+    return render(request, "accounts/signup.html")
+
+def logout_view(request):
+    logout(request)
+    return redirect("login")
+
+def password_reset_request(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            messages.error(request, _("Nessun utente registrato con questa email."))
+            return redirect("password_reset_request")
+
+        # Genera token e URL di reset
+        token = genera_token(user.id)
+        reset_url = f"http://127.0.0.1:8000/accounts/password-reset-confirm/{token}/"
+
+        subject = _("Recupero password - Coin Keeper")
+        message = _("Clicca qui per reimpostare la tua password: {url}").format(url=reset_url)
+
+        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
+
+        messages.success(request, _("Ti abbiamo inviato un'email con le istruzioni per reimpostare la password."))
+        return redirect("login")
+
+    return render(request, "accounts/password_reset_request.html")
+
+def password_reset_confirm(request, token):
+    user_id = verifica_token(token)
+    if not user_id:
+        messages.error(request, _("Link non valido o scaduto."))
+        return redirect("login")
+
+    if request.method == "POST":
+        password1 = request.POST.get("password1")
+        password2 = request.POST.get("password2")
+
+        if password1 != password2:
+            messages.error(request, _("Le password non coincidono."))
+            return redirect("password_reset_confirm", token=token)
+
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            messages.error(request, _("Utente inesistente."))
+            return redirect("login")
+
+        user.set_password(password1)
+        user.save()
+        messages.success(request, _("Password aggiornata con successo! Ora puoi accedere."))
+        return redirect("login")
+
+    return render(request, "accounts/password_reset_confirm.html", {"token": token})

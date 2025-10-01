@@ -1,0 +1,14 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard - Coin Keeper</title>
+</head>
+<body>
+  <h1>{% trans "Benvenuto" %}, {{ user.username }}!</h1>
+  <p>{% trans "Questa è la tua dashboard personale." %}</p>
+
+  <a href="{% url 'logout' %}">{% trans "Logout" %}</a>
+</body>
+</html>
