@@ -1,11 +1,33 @@
+import time
+from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.core.mail import send_mail
+from django.core.cache import cache
 from django.conf import settings
-from .utils import genera_token, verifica_token
+from .utils import genera_token, verifica_token, validate_email_mx
 
+def rate_limit(key_prefix, limit=5, period=60):
+    """
+    Limita a `limit` richieste in `period` secondi per chiave (es. IP).
+    """
+    def decorator(view_func):
+        def wrapper(request, *args, **kwargs):
+            key = f"{key_prefix}:{request.META.get('REMOTE_ADDR')}"
+            history = cache.get(key, [])
+            now = time.time()
+            # pulisci richieste vecchie
+            history = [t for t in history if now - t < period]
+            if len(history) >= limit:
+                messages.error(request, _("Troppe richieste, riprova più tardi."))
+                return redirect("login")
+            history.append(now)
+            cache.set(key, history, timeout=period)
+            return view_func(request, *args, **kwargs)
+        return wrapper
+    return decorator
 
 User = get_user_model()
 
@@ -57,6 +79,8 @@ def login_view(request):
 
     return render(request, "accounts/login.html")
 
+
+@rate_limit("signup", limit=5, period=60)
 def signup_view(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -74,6 +98,12 @@ def signup_view(request):
 
         if User.objects.filter(email=email).exists():
             messages.error(request, _("Email già registrata."))
+            return render(request, "accounts/signup.html")
+
+        try:
+            validate_email_mx(email)
+        except Exception as e:
+            messages.error(request, str(e))
             return render(request, "accounts/signup.html")
 
         user = User.objects.create_user(
