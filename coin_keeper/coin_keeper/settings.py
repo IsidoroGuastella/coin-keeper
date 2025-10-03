@@ -28,7 +28,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'ratelimit',
 ]
 
 MIDDLEWARE = [
@@ -119,3 +118,7 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 LOGIN_URL = "login"
 LOGOUT_REDIRECT_URL = LOGIN_URL
+
+ADMIN_SITE_HEADER = _("Coin Keeper Admin")
+ADMIN_SITE_TITLE = _("Coin Keeper Portal")
+ADMIN_INDEX_TITLE = _("Pannello di controllo")

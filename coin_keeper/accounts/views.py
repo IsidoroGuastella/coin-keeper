@@ -10,15 +10,11 @@ from django.conf import settings
 from .utils import genera_token, verifica_token, validate_email_mx
 
 def rate_limit(key_prefix, limit=5, period=60):
-    """
-    Limita a `limit` richieste in `period` secondi per chiave (es. IP).
-    """
     def decorator(view_func):
         def wrapper(request, *args, **kwargs):
             key = f"{key_prefix}:{request.META.get('REMOTE_ADDR')}"
             history = cache.get(key, [])
             now = time.time()
-            # pulisci richieste vecchie
             history = [t for t in history if now - t < period]
             if len(history) >= limit:
                 messages.error(request, _("Troppe richieste, riprova più tardi."))
@@ -30,6 +26,9 @@ def rate_limit(key_prefix, limit=5, period=60):
     return decorator
 
 User = get_user_model()
+
+def searching(request):
+    return()
 
 def dashboard_view(request):
     return render(request, "accounts/dashboard.html")
@@ -78,7 +77,6 @@ def login_view(request):
             return redirect("login")
 
     return render(request, "accounts/login.html")
-
 
 @rate_limit("signup", limit=5, period=60)
 def signup_view(request):

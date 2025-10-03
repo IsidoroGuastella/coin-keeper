@@ -4,6 +4,10 @@ ENV/
 env/
 .venv/
 
+accounts/migrations/*.py
+!accounts/migrations/__init__.py
+
+
 # File Python compilati
 *.pyc
 __pycache__/
