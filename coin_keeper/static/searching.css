@@ -1,0 +1,195 @@
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* HEADER */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: #457b9d;
+}
+
+header .logo {
+  font-size: 1.5em;
+  font-weight: bold;
+  font-style: italic;
+}
+
+header .actions {
+  display: flex;
+  gap: 10px;
+}
+
+header .button {
+  background-color: transparent;
+  border: 1px solid rgba(255,255,255,0.6);
+  font-size: 12px;
+  padding: 8px 14px;
+}
+
+header .button:hover {
+  background-color: #1d3557;
+  border-color: #1d3557;
+}
+
+/* MAIN LAYOUT */
+main {
+  flex: 1;
+  display: flex;
+}
+
+.colonna-laterale {
+  flex: 0 0 20%;
+}
+
+.sinistra {
+  background: linear-gradient(to right, #f1faee, #a8dadc);
+}
+
+.destra {
+  background: linear-gradient(to left, #f1faee, #a8dadc);
+}
+
+.colonna-centrale {
+  flex: 1;
+  display: flex;
+  background-color: #a8dadc;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.colonna-centrale h1 {
+  margin-bottom: 40px;
+  font-size: 2em;
+  font-style: italic;
+}
+
+/* BOX */
+.box {
+  background-color: rgba(69, 123, 157, 0.3);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(56, 202, 239, 0.2);
+  max-width: 600px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.box .title {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+/* SEARCH BOX */
+.search-box {
+  display: flex;
+  width: 100%;
+}
+
+.search-box input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+/* BOTTONI */
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+}
+
+.button {
+  padding: 15px 25px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  background-color: #457b9d;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.button:hover {
+  background-color: #1d3557;
+  transform: scale(1.05);
+  text-decoration: none;
+  color: #fff;
+}
+
+/* TORNA INDIETRO */
+.box > .button:last-of-type {
+  align-self: flex-end;
+}
+
+/* ZONA RISULTATI */
+.results-container {
+  width: 100%;
+  margin: 25px auto;
+  background-color: rgba(69, 123, 157, 0.2);
+  border-radius: 8px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  padding: 0;
+}
+
+/* INTESTAZIONE RISULTATI */
+.results-header,
+.result-row {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 1fr; /* stessa larghezza per ogni colonna */
+  text-align: center;
+  padding: 10px 15px;
+  font-size: 0.9rem;
+}
+
+/* HEADER DEI RISULTATI*/
+.results-header {
+  background-color: #ffffff;
+  color: #1d3557;
+  font-weight: bold;
+  border-radius: 8px 8px 0 0;
+}
+
+/* RIGA RISULTATO */
+.result-row {
+  background-color: rgba(255, 255, 255, 0.25);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  color: #1d3557;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.result-row:last-of-type {
+  border-bottom: none;
+  border-radius: 0 0 8px 8px;
+}
+
+.result-row:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+  transform: scale(1.01);
+}
+
+/* TESTO VUOTO */
+.no-results {
+  text-align: center;
+  margin-top: 20px;
+  font-style: italic;
+  color: #1d3557;
+}

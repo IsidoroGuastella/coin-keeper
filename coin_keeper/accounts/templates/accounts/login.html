@@ -1,0 +1,63 @@
+{% load static i18n %}
+
+{% get_current_language as LANGUAGE_CODE %}
+{% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li class="{{ message.tags }}">{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+  <meta charset="UTF-8">
+  <title>Coin Keeper</title>
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+  <header>
+    <div class="logo">Coin Keeper</div>
+    <div class="actions">
+      <a href="{% url 'signup' %}" class="button">{% trans "Sign up" %}</a>
+      <form action="{% url 'set_language' %}" method="post" style="display:inline;">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        {% if LANGUAGE_CODE == "it" %}
+          <input type="hidden" name="language" value="en">
+          <button type="submit" class="button">ENG</button>
+        {% else %}
+          <input type="hidden" name="language" value="it">
+          <button type="submit" class="button">ITA</button>
+        {% endif %}
+      </form>
+    </div>
+  </header>
+  <main>
+    <div class="colonna-laterale sinistra"></div>
+    <div class="colonna-centrale">
+      <div class="box">
+        <h1>Coin Keeper</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form__group field">
+                <input type="email" name="email" class="form__field" placeholder="Email" required>
+                <label for="email" class="form__label">Email</label>
+            </div>
+            <div class="form__group field">
+                <input type="password" name="password" class="form__field" placeholder="Password" required>
+                <label for="password" class="form__label">Password</label>
+            </div>
+            <a href="{% url 'password_reset_request' %}" class="form__group forgot">
+              {% trans "Forgot your password?" %}
+            </a>
+            <div class="form__group field">
+              <button type="submit" class="button button--primary">{% trans "Login" %}</button>
+            </div>
+        </form>
+      </div>
+    </div>
+    <div class="colonna-laterale destra"></div>
+  </main>
+</body>
+</html>

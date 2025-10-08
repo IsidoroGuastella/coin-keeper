@@ -1,0 +1,42 @@
+# Ambiente virtuale
+venv/
+ENV/
+env/
+.venv/
+
+accounts/migrations/*.py
+!accounts/migrations/__init__.py
+
+
+# File Python compilati
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+*.pyd
+*.so
+
+# File di log
+*.log
+
+# File SQLite locali (se mai ne userai uno in dev)
+db.sqlite3
+
+# Configurazioni IDE/editor
+.vscode/
+.idea/
+*.swp
+*~
+
+# File di sistema
+.DS_Store
+Thumbs.db
+
+# Variabili ambiente
+.env
+
+# Cartelle di build
+/staticfiles/
+/media/
+build/
+dist/

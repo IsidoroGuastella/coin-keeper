@@ -1,0 +1,198 @@
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* HEADER */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  /* aggiunge una sfumatura verso il basso */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: #457b9d;
+}
+
+header .logo {
+  font-size: 1.5em;
+  font-weight: bold;
+  font-style: italic;
+}
+
+header .actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* MAIN LAYOUT */
+main {
+  flex: 1;
+  display: flex;
+}
+
+.colonna-laterale {
+  flex: 0 0 20%;
+}
+.sinistra {
+  background: linear-gradient(to right, #f1faee, #a8dadc); 
+}
+.destra {
+  background: linear-gradient(to left, #f1faee, #a8dadc);
+}
+
+.colonna-centrale {
+  flex: 1;
+  display: flex;
+  background-color: #a8dadc;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.colonna-centrale h1 {
+  font-size: 2em;
+  font-style: italic;
+}
+
+.colonna-centrale form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 250px;
+}
+
+.box {
+  background-color: rgba(69, 123, 157,0.3);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(56, 202, 239, 0.2);
+  max-width: 250px;
+  width: 100%;
+  text-align: center;
+}
+
+.form__group {
+  position: relative;
+  padding: 20px 0 0;
+  width: 100%;
+  max-width: 250px;
+}
+
+.form__field {
+  font-family: inherit;
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid #fff;
+  outline: 0;
+  font-size: 15px;
+  color: #fff;
+  padding: 7px 0;
+  background: transparent;
+  transition: border-color 0.2s;
+}
+
+.form__field::placeholder {
+  color: transparent;
+}
+
+.form__field:placeholder-shown ~ .form__label {
+  font-size: 17px;
+  cursor: text;
+  top: 25px;
+}
+
+.form__label {
+  position: absolute;
+  top: 0;
+  display: block;
+  transition: 0.2s;
+  font-size: 17px;
+  color: #fff;
+  pointer-events: none;
+}
+
+.form__field:focus {
+  padding-bottom: 6px;
+  font-weight: 700;
+  border-width: 3px;
+  border-image: linear-gradient(to right, #116399, #38caef);
+  border-image-slice: 1;
+}
+
+.form__field:focus ~ .form__label {
+  position: absolute;
+  top: 5px;
+  display: block;
+  transition: 0.2s;
+  font-size: 17px;
+  color: #1d3557;
+  font-weight: 700;
+}
+
+/* reset input */
+.form__field:required, .form__field:invalid {
+  box-shadow: none;
+}
+
+.forgot {
+  font-size: 15px;
+  text-align: right;
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+}
+.forgot:hover {
+  color: #1d3557;
+}
+
+.button--primary {
+  padding: 12px 20px;
+  font-size: 15px;
+  border-radius: 10px;
+  width: 100%;
+}
+
+/* Bottoni generici */
+.button {
+  display: inline-block;        /* così vale anche per <a> */
+  cursor: pointer;
+  padding: 10px 15px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  background-color: #457b9d;
+  text-decoration: none;        /* rimuove il sottolineato */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Effetto hover generico */
+.button:hover {
+  background-color: #1d3557;
+  transform: scale(1.05);
+  text-decoration: none;        /* assicura niente sottolineato */
+  color: #fff;
+}
+
+/* Bottoni nell’header */
+header .button {
+  background-color: transparent;
+  border: 1px solid rgba(255,255,255,0.6);
+  font-size: 12px;
+  padding: 8px 14px;
+}
+
+/* Hover dei bottoni nell’header */
+header .button:hover {
+  background-color: #1d3557;
+  border-color: #1d3557;
+}

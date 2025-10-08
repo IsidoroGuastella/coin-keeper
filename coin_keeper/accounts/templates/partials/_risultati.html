@@ -1,0 +1,18 @@
+{% if risultati %}
+  <div class="results-container">
+    <div class="results-header">
+      <span>Valore nominale</span>
+      <span>Stato di provenienza</span>
+      <span>Anno di conio</span>
+    </div>
+    {% for e in risultati %}
+      <div class="result-row">
+        <span class="coin-value">{{ e.moneta.valore_nominale }}</span>
+        <span class="coin-country">{{ e.moneta.stato.nome }}</span>
+        <span class="coin-year">{{ e.moneta.anno_conio }}</span>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p class="no-results">Nessun risultato trovato.</p>
+{% endif %}

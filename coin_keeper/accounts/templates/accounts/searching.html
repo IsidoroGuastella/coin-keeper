@@ -1,0 +1,54 @@
+{% load static i18n %}
+
+{% get_current_language as LANGUAGE_CODE %}
+{% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li class="{{ message.tags }}">{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+  <meta charset="UTF-8">
+  <title>Coin Keeper - Dashboard</title>
+  <link rel="stylesheet" href="{% static 'searching.css' %}">
+</head>
+<body>
+  <header>
+    <div class="logo">Coin Keeper</div>
+    <div class="actions">
+      <a href="{% url 'logout' %}" class="button">{% trans "Logout" %}</a>
+      <form action="{% url 'set_language' %}" method="post" style="display:inline;">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        {% if LANGUAGE_CODE == "it" %}
+          <input type="hidden" name="language" value="en">
+          <button type="submit" class="button">ENG</button>
+        {% else %}
+          <input type="hidden" name="language" value="it">
+          <button type="submit" class="button">ITA</button>
+        {% endif %}
+      </form>
+    </div>
+  </header>
+  <main>
+    <div class="colonna-laterale sinistra"></div>
+    <div class="colonna-centrale">
+      <div class="box">
+        <div class="title">Ricerca</div>
+        <form method="get" class="search-form">
+          <div class="search-box">
+            <input type="text" id="search-input" placeholder="Cerca una moneta per valore, anno o luogo di conio...">
+          </div>
+        </form>
+        <div id="results"></div>
+        <script src="{% static 'js/searching.js' %}"></script>
+        <a href="{% url 'dashboard' %}" class="button">Torna indietro</a>
+      </div>
+    </div>
+    <div class="colonna-laterale destra"></div>
+  </main>
+</body>
+</html>
